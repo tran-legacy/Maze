@@ -16,10 +16,14 @@
 
 class Maze {
 public: 
+	// Empty exception classes
 	class InvalidStartingPoint {};
-	Maze(); 
+	class InvalidMaze{};
+	// Constructor
+	Maze();
 	Maze(std::ifstream& file);
-	~Maze(); 
+	// Destructor
+	~Maze();
 
 	void print() const;
 
@@ -34,9 +38,11 @@ private:
 	int startingY; 
 	int height; 
 	int width; 
-
+	int exitY; 
+	int exitX; 
+	bool haveExit = false; 
 	static const char WALL = '#'; 
-		
+	static const char EXIT = 'o';	
 	void firstLineInit(std::string& firstLine);
 };
 

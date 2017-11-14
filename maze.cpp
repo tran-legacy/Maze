@@ -33,20 +33,50 @@ Maze::Maze(std::ifstream& file) {
 	maze = new char*[this->height]; 
 	for (int i =0; i < this->height; ++i) { maze[i] = new char[this->width]; }
 
+	int column; 
 	std::string temp = ""; 	
 	for (int row = 0; row < this->height; ++row) {
-		std::getline(file, temp);	
-		for (int column = 0; column < this->width; ++column) {
-		   	maze[row][column] = temp[column]; 
+		std::getline(file, temp);
+		for (column = 0; column < this->width; ++column) {
+		   	if (temp[column] == EXIT) {
+				this->haveExit = true;
+				// There should only be one exit given, it's coordinate will be kept track
+				this->exitY = row; this->exitX = column; 
+			}	
+			maze[row][column] = temp[column]; 
+
+		}
+		if (temp[column + 1] == WALL) {
+			std::cout << 
+				"ERROR: Initialized width and height does not match up with maze drawing"
+				<< std::endl;
+			throw InvalidMaze();
 		}
 		temp = ""; 	
 	}
 
-	/*if (maze[startingY][startingX] == WALL) {
-	   	std::cout << "Invalid starting point." << std::endl;	
-	} else if (startingY > height || startingX > width) {
-		std::cout << "Invalid starting point." << std::endl;
-	}*/
+	// Exception handling, if startingY or startingX is out of range, throw exception
+	if (startingY > height || startingX > width) {
+		std::cout << "Invalid starting point" << std::endl;
+		throw InvalidStartingPoint(); 
+	}
+   	// Else if starting point is a wall, throw exception	
+	else if (maze[startingY][startingX] == WALL) {
+	   	std::cout << "Invalid starting point" << std::endl;	
+		throw InvalidStartingPoint(); 
+	} 
+	// If there's no given exit, throw exception
+	if (!haveExit) {
+		std::cout << "No exit - Sartre was right" << std::endl;
+		throw InvalidMaze();
+	}
+	// Else there's an exit but it's block, therefore not reachable
+	else if (maze[exitY-1][exitX] == WALL && maze[exitY][exitX+1] == WALL &&
+			 maze[exitY+1][exitX] == WALL && maze[exitY][exitX-1] == WALL) {
+		std::cout << "No exit - Sartre was right" << std::endl;
+		throw InvalidMaze();
+	}
+
 }
 
 //// private helper function that handles the first line of the inputted file //// 
