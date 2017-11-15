@@ -1,7 +1,7 @@
 /*************************
  * Tran Le
  * CSS342 - Project 4
- * [INSERT TIME TOOK HERE] 
+ * 13 hours
  * Vim on Cygwin 
 **************************/ 
 
@@ -24,7 +24,6 @@ public:
 	~MazeRunner(){} 
 	bool findPath(const int Y, const int X); 
 	void printPath(); 	
-//	void solve(); 
 private:
 	// SHOULD THIS BE A POINTER??????????????????????
 	Maze maze; 

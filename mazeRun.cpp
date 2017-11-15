@@ -1,7 +1,7 @@
 /*************************
  * Tran Le
  * CSS342 - Project 4
- * [INSERT TIME TOOK HERE] 
+ * 13 hours 
  * Vim on Cygwin 
 **************************/ 
 

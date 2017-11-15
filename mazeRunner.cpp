@@ -1,7 +1,7 @@
 /*********************
  * Tran Le
  * CSS342 - Project 4 
- * [insert time took here] 
+ * 13 hours 
  * Vim on Cygwin 
 *********************/
 
@@ -75,11 +75,4 @@ void MazeRunner::printPath() {
 	}
 	std::cout << "EXIT" << std::endl;
 }
-//// calls findPath and handle no exit ////
-//void MazeRunner::solve() {
-//	if (this->findPath(this->maze.getStartingY(), this->maze.getStartingX())) {
-//		this->printPath();
-//	} else {
-//		std::cout << "No exit - Sartre was right" << std::endl;
-//	}
-//}
+
