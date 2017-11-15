@@ -24,12 +24,20 @@ int main(int argc, char* *argv) {
 			Maze maze(infile); 
 			std::cout << maze.getHeight() << " " << maze.getWidth() << " " 
 				<< maze.getStartingY() << " " << maze.getStartingX() << std::endl;
+			std:: cout << "MAZE" << std::endl;
 			maze.print();
 			// The maze runner is given a maze to solve 
 			// solve() will print out the maze and the path the runner took 
 			// and a string representation of the route took 
-			//MazeRunner runner(maze);
-		   	//runner.solve(); 
+			MazeRunner runner(maze);
+			if (runner.findPath(maze.getStartingY(), maze.getStartingX())) {
+				std::cout << std::endl << "SOLVED MAZE" << std::endl; 
+				runner.printPath();
+			} else {
+				std::cout << "No exit - Sartre was right" << std::endl;
+			}
+
+
 			infile.close(); 
 		} else if (argc > 2) {
 			std::cout << "One file at a time please" << std::endl; 

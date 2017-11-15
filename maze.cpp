@@ -9,9 +9,7 @@
 // maze.cpp is implementation of maze.h
 // ///////////////////////
 
-#include <iostream> 
-#include <fstream>
-#include <string> 
+#include <iostream>  
 #include "maze.h" 
 
 /***********CONSTRUCTORS**************/
@@ -29,29 +27,39 @@ Maze::Maze(std::ifstream& file) {
 	firstLine += '\n'; 
 	firstLineInit(firstLine);
 	
-	// Initalize size of maze and put chars in maze
+	// Initalize size of maze 
 	maze = new char*[this->height]; 
 	for (int i =0; i < this->height; ++i) { maze[i] = new char[this->width]; }
 
+	// Variables needed before the big section....
 	int column; 
+	bool haveExit = false; 
 	std::string temp = ""; 	
 	for (int row = 0; row < this->height; ++row) {
+		// Get a line in file
 		std::getline(file, temp);
+		// If there are not enough characters to fill all columns in a row
+		if (temp.size() < this->width) {
+			std::cout << "ERROR: Not enough char to fill row" << std::endl;
+			throw InvalidMaze(); 
+		}
 		for (column = 0; column < this->width; ++column) {
-		   	if (temp[column] == EXIT) {
-				this->haveExit = true;
+		   	// If current character in current line is an EXIT symbol
+			if (temp[column] == EXIT) {
+				haveExit = true;
 				// There should only be one exit given, it's coordinate will be kept track
 				this->exitY = row; this->exitX = column; 
-			}	
+			}
+			// Copy each char into correct index
 			maze[row][column] = temp[column]; 
-
 		}
-		if (temp[column + 1] == WALL) {
-			std::cout << 
-				"ERROR: Initialized width and height does not match up with maze drawing"
-				<< std::endl;
-			throw InvalidMaze();
-		}
+		//// If there are not enough characters to fill the column 
+		//if (temp[column + 1] == WALL) {
+		//	std::cout << 
+		//		"ERROR: Initialized width and height does not match up with maze drawing"
+		//		<< std::endl;
+		//	throw InvalidMaze();
+		//}
 		temp = ""; 	
 	}
 
@@ -65,17 +73,7 @@ Maze::Maze(std::ifstream& file) {
 	   	std::cout << "Invalid starting point" << std::endl;	
 		throw InvalidStartingPoint(); 
 	} 
-	// If there's no given exit, throw exception
-	if (!haveExit) {
-		std::cout << "No exit - Sartre was right" << std::endl;
-		throw InvalidMaze();
-	}
-	// Else there's an exit but it's block, therefore not reachable
-	else if (maze[exitY-1][exitX] == WALL && maze[exitY][exitX+1] == WALL &&
-			 maze[exitY+1][exitX] == WALL && maze[exitY][exitX-1] == WALL) {
-		std::cout << "No exit - Sartre was right" << std::endl;
-		throw InvalidMaze();
-	}
+
 
 }
 
@@ -112,9 +110,10 @@ Maze::~Maze() {
 		delete[] maze[row]; 
 	}	
 	delete[] maze;
+	maze = NULL;
 }
 
-/****************Functions*******************/
+/****************FUNCTIONS*******************/
 //// print out the maze ////
 void Maze::print() const {
 	for (int row = 0; row < this->height; ++row) {
@@ -123,4 +122,34 @@ void Maze::print() const {
 		}
 		std::cout << std::endl;
 	}
+}
+
+/******************OPERATOR OVERLOADING*************/
+Maze& Maze::operator=(const Maze& rhs) {
+	if (this == &rhs) return *this; 
+
+	// Delete this maze
+	for (int row = 0; row < height; ++row) {
+		delete[] maze[row]; 
+	}
+	delete[] maze; maze = NULL;
+	// Allocate memory for this 
+	maze = new char*[rhs.height]; 
+	for (int i =0; i < rhs.height; ++i) { maze[i] = new char[rhs.width]; }
+
+	// Copy data from rhs to this 
+	for (int row = 0; row < rhs.height; ++row) {
+		for(int col = 0; col < rhs.width; ++col) {
+			maze[row][col] = rhs.maze[row][col]; 
+		}
+	}
+	
+	this->startingX = rhs.startingX; 
+	this->startingY = rhs.startingY; 
+	this->height = rhs.height; 
+	this->width = rhs.width; 
+	this->exitY = rhs.exitY; 
+	this->exitX = rhs.exitX; 
+
+	return *this;
 }
